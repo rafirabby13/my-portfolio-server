@@ -40,3 +40,16 @@ model Skill {
   skill  String
   image  String
 }
+
+model Project {
+  id           Int      @id @default(autoincrement())
+  name         String
+  image        String?
+  stack        String?
+  description  String?
+  liveLink     String?
+  details      String?
+  github       String?
+  challenges   String?
+  futurePlans  String?
+}
