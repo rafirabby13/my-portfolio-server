@@ -34,7 +34,26 @@ model User {
   isVerified Boolean    @default(false)
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
+   posts      Post[] 
 
+}
+model Post {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description     String?   // full blog body
+  date        DateTime
+  readTime    String?
+  category    String
+  tags        String[]
+  image       String?
+  slug        String   @unique
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relation field
+  authorId    Int
+  author      User     @relation(fields: [authorId], references: [id])
 }
 
 model Skill {
