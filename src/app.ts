@@ -4,6 +4,7 @@ import { projectRouter } from './modules/projects/projects.routes'
 import { userRouter } from './modules/user/user.routes'
 import cors from "cors"
 import { authRouter } from './modules/auth/auth.routes'
+import { postsRouter } from './modules/posts/posts.routes'
 
 
 const app = express()
@@ -13,6 +14,7 @@ app.use("/api/v1/skill", skillRouter)
 app.use("/api/v1/project", projectRouter)
 app.use("/api/v1/user", userRouter)
 app.use("/api/v1/auth", authRouter)
+app.use("/api/v1/post", postsRouter)
 app.get("/", (req, res) => {
     res.status(200).send({
         message: "Hello to my Portfolio"

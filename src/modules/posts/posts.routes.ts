@@ -3,7 +3,10 @@ import { postsController } from "./posts.controller";
 
 const router = Router()
 
-router.get("/", postsController.getAllposts)
+router.get("/all-posts", postsController.getAllposts)
 router.post("/", postsController.createPost)
+router.post("/:id", postsController.deletePost)
+router.patch("/:id", postsController.updatePost)
+router.get("/single-post/:id", postsController.getASinglePOst)
 
 export const postsRouter = router

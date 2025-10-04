@@ -1,22 +1,11 @@
 
 import { prisma } from "../../config/db"
-import { CreatePostPayload, CreateUserPayload } from "../../utils/type.user"
+import { CreatePostPayload, CreateUserPayload, UpdatePostPayload } from "../../utils/type.user"
 import bcrypt from "bcryptjs";
 
 const getAllposts = async () => {
-    const users = await prisma.user.findMany({
-        select: {
-            id: true,
-            name: true,
-            email: true,
-            phone: true,
-            role: true,
-            status: true,
-            image: true,
-
-        }
-    })
-    return users
+    const posts = await prisma.post.findMany()
+    return posts
 
 }
 const createPost = async (payload: CreatePostPayload) => {
@@ -27,9 +16,41 @@ const createPost = async (payload: CreatePostPayload) => {
     return user
 
 }
+const deletePost = async (blogId: number) => {
+    await prisma.post.delete({
+        where: {
+            id: blogId
+        }
+    })
+    return {}
+
+}
+const updatePost = async (blogId: number,payload: UpdatePostPayload) => {
+    const post= await prisma.post.update({
+        where: {
+            id:blogId
+        },
+        data: payload
+    })
+    return post
+
+}
+const getASinglePOst = async (blogId: number) => {
+    const post= await prisma.post.findUnique({
+        where: {
+            id:blogId
+        }
+    
+    })
+    return post
+
+}
 
 
 export const postsService = {
     getAllposts,
-    createPost
+    createPost,
+    deletePost,
+    updatePost,
+    getASinglePOst
 }
