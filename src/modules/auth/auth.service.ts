@@ -8,16 +8,19 @@ import bcrypt from "bcryptjs";
 
 
 const userLogin = async (payload: LoginUserPayload) => {
+      if (!payload.email || !payload.password) {
+        return { success: false, message: "Email and password are required" };
+    }
     const user = await prisma.user.findUnique({
         where: { email: payload.email },
     });
 
     if (!user) {
-        return { success: false, message: "User does not exist" };
+       return { success: false, message: "Invalid email or password" };
     }
 
     if (!user.password) {
-        return { success: false, message: "User has no password set" };
+        return { success: false, message: "Invalid email or password" };
     }
 
     const isPasswordMatched = await bcrypt.compare(
@@ -26,7 +29,7 @@ const userLogin = async (payload: LoginUserPayload) => {
     );
     console.log(payload.password,isPasswordMatched, user.password)
     if (!isPasswordMatched) {
-        return { success: false, message: "Password not matched" };
+        return { success: false, message: "Invalid email or password" };
     }
    
 

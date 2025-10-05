@@ -4,7 +4,7 @@ export async function seedSuperAdmin() {
     // ⚠️ Change this after first login
     const email = process.env.ADMIN_EMAIL as string
     const password = process.env.ADMIN_PASSWORD as string
-    console.log(email, password)
+    
     const name = "Super Admin"
     const phone = "01750296501"
 

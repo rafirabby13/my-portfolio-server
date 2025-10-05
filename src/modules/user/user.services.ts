@@ -29,32 +29,99 @@ const getASingleUser = async (email: string) => {
 
 }
 const createUser = async (payload: CreateUserPayload) => {
-    const hashedPassword = await bcrypt.hash(payload.password as string, Number(process.env.PASS_SALT))
-    const user = await prisma.user.create({
-        data: {
-            email: payload.email,
-            name: payload.name,
-            image: payload.image,
-            phone: payload.phone,
-            password: hashedPassword
-        },
-        select: {
-            id: true,
-            name: true,
-            email: true,
-            phone: true,
-            role: true,
-            status: true,
-            image: true,
-            isVerified: true,
-            createdAt: true,
-            updatedAt: true,
-        },
-    })
-    return user
+    try {
+        // 1. Validate required fields
+        if (!payload.email || !payload.name || !payload.password) {
+            return { 
+                success: false, 
+                message: "Email, name, and password are required" 
+            }
+        }
 
+        // 2. Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!emailRegex.test(payload.email)) {
+            return { 
+                success: false, 
+                message: "Invalid email format" 
+            }
+        }
+
+        // 3. Validate password strength
+        if (payload.password.length < 6) {
+            return { 
+                success: false, 
+                message: "Password must be at least 6 characters long" 
+            }
+        }
+
+        // 4. Normalize email
+        const normalizedEmail = payload.email.trim().toLowerCase()
+
+        // 5. Check if user already exists
+        const existingUser = await prisma.user.findUnique({
+            where: { email: normalizedEmail }
+        })
+
+        if (existingUser) {
+            return { 
+                success: false, 
+                message: "User with this email already exists" 
+            }
+        }
+
+        // 6. Hash password
+        const hashedPassword = await bcrypt.hash(
+            payload.password, 
+            Number(process.env.PASS_SALT) || 10
+        )
+
+        // 7. Create user
+        const user = await prisma.user.create({
+            data: {
+                email: normalizedEmail,
+                name: payload.name.trim(),
+                image: payload.image,
+                phone: payload.phone,
+                password: hashedPassword
+            },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                phone: true,
+                role: true,
+                status: true,
+                image: true,
+                isVerified: true,
+                createdAt: true,
+                updatedAt: true,
+            },
+        })
+
+        return { 
+            success: true, 
+            data: user,
+            message: "User created successfully" 
+        }
+
+    } catch (error: any) {
+        console.error("Error creating user:", error)
+        
+        // Handle Prisma unique constraint error
+        if (error.code === 'P2002') {
+            return { 
+                success: false, 
+                message: "User with this email already exists" 
+            }
+        }
+
+        return { 
+            success: false, 
+            message: "Failed to create user" 
+        }
+    }
 }
-
 
 export const userService = {
     getAllusers,
