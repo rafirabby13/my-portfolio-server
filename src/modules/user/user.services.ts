@@ -19,6 +19,15 @@ const getAllusers = async () => {
     return users
 
 }
+const getASingleUser = async (email: string) => {
+    const user = await prisma.user.findUnique({
+        where:{
+            email
+        }
+    })
+    return user
+
+}
 const createUser = async (payload: CreateUserPayload) => {
     const hashedPassword = await bcrypt.hash(payload.password as string, Number(process.env.PASS_SALT))
     const user = await prisma.user.create({
@@ -49,5 +58,6 @@ const createUser = async (payload: CreateUserPayload) => {
 
 export const userService = {
     getAllusers,
-    createUser
+    createUser,
+    getASingleUser
 }

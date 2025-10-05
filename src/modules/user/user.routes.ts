@@ -5,5 +5,6 @@ const  router = Router()
 
 router.get("/",usersController.getAllusers)
 router.post("/", usersController.createUser)
+router.get("/single-user", usersController.getASingleUser)
 
 export const userRouter = router

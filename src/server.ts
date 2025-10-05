@@ -1,5 +1,6 @@
 import app from "./app"
 import { prisma } from "./config/db"
+import { seedSuperAdmin } from "./modules/admin/seedSuperAdmin"
 
 const connectDb = async () => {
     try {
@@ -16,6 +17,7 @@ const connectDb = async () => {
 const startServer = async () => {
     try {
        await connectDb()
+       await seedSuperAdmin()
         app.listen(5000, () => {
             console.log("******........Portfolio Server is running...****")
         })

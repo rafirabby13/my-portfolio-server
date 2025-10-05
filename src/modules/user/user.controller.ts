@@ -12,6 +12,17 @@ const getAllusers = async (req: Request, res: Response) => {
     }
 
 }
+const getASingleUser = async (req: Request, res: Response) => {
+    try {
+        const email = req.query.email as string
+        console.log(email)
+        const user = await userService.getASingleUser(email)
+        res.status(200).send({ user })
+    } catch (error) {
+        res.send({ message: error })
+    }
+
+}
 const createUser = async (req: Request, res: Response) => {
     try {
         console.log(req.body)
@@ -29,5 +40,6 @@ const createUser = async (req: Request, res: Response) => {
 
 export const usersController = {
     getAllusers,
-    createUser
+    createUser,
+    getASingleUser
 }
