@@ -18,9 +18,9 @@ const startServer = async () => {
     try {
        await connectDb()
        await seedSuperAdmin()
-        app.listen(5000, () => {
-            console.log("******........Portfolio Server is running...****")
-        })
+        // app.listen(5000, () => {
+        //     console.log("******........Portfolio Server is running...****")
+        // })
 
     } catch (error) {
         console.log(error)
