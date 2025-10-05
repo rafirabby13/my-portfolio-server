@@ -1,5 +1,5 @@
 
-import { User } from "@prisma/client";
+
 import { prisma } from "../../config/db"
 import { LoginUserPayload } from "../../utils/type.user"
 import bcrypt from "bcryptjs";
