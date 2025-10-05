@@ -1,10 +1,10 @@
 import express from 'express'
-import { skillRouter } from './modules/skills/skills.routes'
-import { projectRouter } from './modules/projects/projects.routes'
-import { userRouter } from './modules/user/user.routes'
 import cors from "cors"
-import { authRouter } from './modules/auth/auth.routes'
-import { postsRouter } from './modules/posts/posts.routes'
+import { skillRouter } from './app/modules/skills/skills.routes'
+import { projectRouter } from './app/modules/projects/projects.routes'
+import { userRouter } from './app/modules/user/user.routes'
+import { authRouter } from './app/modules/auth/auth.routes'
+import { postsRouter } from './app/modules/posts/posts.routes'
 
 
 const app = express()

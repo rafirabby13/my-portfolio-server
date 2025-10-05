@@ -1,11 +1,11 @@
 import app from "./app"
-import { prisma } from "./config/db"
-import { seedSuperAdmin } from "./modules/admin/seedSuperAdmin"
-import { VercelRequest, VercelResponse } from "@vercel/node";
-
+import { prisma } from "./app/config/db";
+import { seedSuperAdmin } from "./app/modules/admin/seedSuperAdmin";
+import { Server } from "http";
+let server: Server;
 // const connectDb = async () => {
 //     try {
-        
+
 //         console.log("******.....Db Connected Successfullyy........ ")
 
 //     } catch (error) {
@@ -15,29 +15,73 @@ import { VercelRequest, VercelResponse } from "@vercel/node";
 //     }
 // }
 
+
 const startServer = async () => {
-    try {
-        await prisma.$connect()
-        await seedSuperAdmin()
-        // app.listen(5000, () => {
-        //     console.log("******........Portfolio Server is running...****")
-        // })
+  try {
+    await prisma.$connect();
 
-    } catch (error) {
-        console.log(error)
-    }
+    server = app.listen(5000, () => {
+      console.log(`Parcel Server is running on port ${5000} `)
+    })
 
-
-}
-
-
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-    
-    try {
-    await startServer() // connect once per cold start
-    app(req, res); // pass request to Express
   } catch (error) {
-    console.error("Serverless handler error:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    console.log(error)
   }
+
 }
+
+
+(async () => {
+
+  await startServer()
+  await seedSuperAdmin()
+})()
+
+process.on("SIGTERM", (err) => {
+  console.log("SIGTERM Signal Recieved.......server shutdown", err)
+
+  if (server) {
+    server.close(() => {
+      process.exit(1)
+    })
+
+  }
+
+  process.exit(1)
+})
+process.on("SIGINT", (err) => {
+  console.log("SIGINT Signal Recieved......server shutdown", err)
+
+  if (server) {
+    server.close(() => {
+      process.exit(1)
+    })
+
+  }
+
+  process.exit(1)
+})
+process.on("unhandledRejection", (err) => {
+  console.log("Unhandle Rejection detected.......server shutdown", err)
+
+  if (server) {
+    server.close(() => {
+      process.exit(1)
+    })
+
+  }
+
+  process.exit(1)
+})
+process.on("uncaughtException", (err) => {
+  console.log("Uncaught Exception detected.......server shutdown", err)
+
+  if (server) {
+    server.close(() => {
+      process.exit(1)
+    })
+
+  }
+
+  process.exit(1)
+})
