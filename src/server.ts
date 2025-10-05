@@ -20,8 +20,8 @@ const startServer = async () => {
   try {
     await prisma.$connect();
 
-    server = app.listen(5000, () => {
-      console.log(`Parcel Server is running on port ${5000} `)
+    server = app.listen(process.env.PORT, () => {
+      console.log(`Parcel Server is running on port ${process.env.PORT} `)
     })
 
   } catch (error) {
@@ -85,3 +85,5 @@ process.on("uncaughtException", (err) => {
 
   process.exit(1)
 })
+
+export default app;

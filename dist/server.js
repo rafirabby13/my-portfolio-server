@@ -27,8 +27,8 @@ let server;
 const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield db_1.prisma.$connect();
-        server = app_1.default.listen(5000, () => {
-            console.log(`Parcel Server is running on port ${5000} `);
+        server = app_1.default.listen(process.env.PORT, () => {
+            console.log(`Parcel Server is running on port ${process.env.PORT} `);
         });
     }
     catch (error) {
@@ -75,3 +75,4 @@ process.on("uncaughtException", (err) => {
     }
     process.exit(1);
 });
+exports.default = app_1.default;
